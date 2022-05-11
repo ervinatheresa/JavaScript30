@@ -30,23 +30,36 @@
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
   const items = JSON.parse(localStorage.getItem('items')) || [];
+  //10. Its going to get from the local storage and if not, it grabs the empty array
 
   function addItem(e) {
-
+    //1. console.log('Hello'); //Go to settings and preserve log to see the console.log function. See that the page reloads therefore we have to put preventDefault
     e.preventDefault();
-
+    //2. console.log('hello'); this checks that the prevent Default is not currently occuring
+    //3. We want to store the item name typed as an object. We can use document.querySelector, but we can also use this. This is the form element. It will grab the class and specify which is used. Useful if there are several forms and we want to narrow down the search. Value is the property of the input
     const text = (this.querySelector(`[name=item]`)).value;
-
+    // const item = {
+      //we can use text:text, but in one of his ES6 videos, shown that we can just do text
+    //   text,
+    //   done: false
+    // }
     const item = {
       text,
       done: false
     }
+
+    //4. to check the item console.log(item);
     items.push(item);
 
     populateList(items, itemsList);
+    //6a. populateList(items, itemsList); Everytime addItem is called, populateList is going to be processed and going to add the item to the line
+    //8. localStorage.setItem('items', items); Do this while opening application (next to console). This will give out object object.
+    //8a. Thats why we have to do:  localStorage.setItem('items', JSON.stringify(items));
     localStorage.setItem('items', JSON.stringify(items));
     this.reset();
+    //5. this.reset() resets the wording in the box
   }
+  //6. Inputting the objects inside the list. .join will turn the array into one big string
   function populateList(plates = [], platesList) {
     platesList.innerHTML = plates.map((plate, i) => {
       return `
@@ -59,22 +72,38 @@
   }
 
   function toggleDone(e) {
-    // if(!e.target.matches('input')) return;
-    // const el = e.target;
-    // console.log(el.dataset.index);
-    // const index = el.dataset.index;
-    // items[index].done = !items[index].done;
+    if(!e.target.matches('input')) return; //skip this unless its an input
+    const el = e.target;
+    console.log(el.dataset.index); //this gives out the index
+    const index = el.dataset.index;
+    items[index].done = !items[index].done;
+    localStorage.setItem('items', JSON.stringify(items));
+    //console.log(e.target); //This gives out two things: the label and the checkbox
   }
-
-  const checkBoxes = document.querySelectorAll('input');
-  checkBoxes.forEach(input => input.addEventListener('click', () => alert('hi')));
-
+        //7 put the input type checkbox and with the property checked, it will always be true even if we write checked = false. Check CSS in order to see how the checkbox css work
   addItems.addEventListener('submit', addItem);
-  // itemsList.addEventListener('click', toggleDone)
+  itemsList.addEventListener('click', toggleDone)
+// We do not want these (below one)
+  // const checkBoxes = document.querySelectorAll('input');
+  // checkBoxes.forEach(input => input.addEventListener('click', () => alert('hi')));
+        // 7a .Open console and type out localStorage to see that there is a localStorage existing. If we open application next to console, we can see the local storage
+        //9. Change line 32 to: const items = JSON.parse(localStorage.getItem('items')) || []; This is to check that there is an object when reloading.
   populateList(items, itemsList);
-
+  //Interesting to see if ^is commented out.
 </script>
 
 
 </body>
 </html>
+
+<script>
+  // What we can try to do:
+  // const checkBoxes = document.querySelectorAll('input');
+  // checkBoxes.forEach(input => input.addEventListener('click', () => alert('hi')));
+  // populateList(items,itemsList)
+  // Try to reload this and see that its not saved in the new one.
+
+  // in the function toggleDone(e), do console.log(e) and then console.log(e.target)
+  // if(!e.target.matches('input')) return;
+  // See that it only clicks on the checkboxes
+</script>
